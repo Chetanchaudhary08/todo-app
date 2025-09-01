@@ -156,6 +156,48 @@ app.get("/api/v1/get-todos", usermiddleware, async (req: AuthRequest, res: Respo
     }
 });
 
+// Update a todo
+app.put("/api/v1/update-todo/:id", usermiddleware, async (req: AuthRequest, res: Response) => {
+    try {
+        const { title, priority, tags, completed } = req.body;
+
+        const updatedTodo = await Todo.findOneAndUpdate(
+            { _id: req.params.id, user: req.user!.userID }, // ensure only owner can update
+            { title, priority, tags, completed },
+            { new: true }
+        );
+
+        if (!updatedTodo) {
+            return res.status(404).json({ message: "Todo not found or not authorized" });
+        }
+
+        res.json(updatedTodo);
+    } catch (error) {
+        console.error("Error updating todo:", error);
+        res.status(500).json({ message: "Error updating todo" });
+    }
+});
+
+// Delete a todo
+app.delete("/api/v1/delete-todo/:id", usermiddleware, async (req: AuthRequest, res: Response) => {
+    try {
+        const deletedTodo = await Todo.findOneAndDelete({
+            _id: req.params.id,
+            user: req.user!.userID, // ensure only owner can delete
+        });
+
+        if (!deletedTodo) {
+            return res.status(404).json({ message: "Todo not found or not authorized" });
+        }
+
+        res.json({ message: "Todo deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting todo:", error);
+        res.status(500).json({ message: "Error deleting todo" });
+    }
+});
+
+
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
