@@ -149,7 +149,7 @@ app.post("/api/v1/createtodo", usermiddleware, async (req: AuthRequest, res: Res
 
 app.get("/api/v1/get-todos", usermiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        const todos = await Todo.find({ user: req.user!.id });
+        const todos = await Todo.find({ user: req.user!.userID });
         res.json(todos);
     } catch (error) {
         res.status(500).json({ message: "Error fetching todos" });
