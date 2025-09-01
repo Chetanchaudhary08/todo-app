@@ -7,8 +7,11 @@ import cors from "cors";
 import bcrypt from "bcrypt";
 import user from "./models/usermodel.js"
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
-mongoose.connect("mongodb+srv://chetan01:gd0YIxXXu8aHXJ5p@chetan01.9ncgjlm.mongodb.net/todo-app").then(() => {
+const DB_url = process.env.dburl as string;
+mongoose.connect(DB_url).then(() => {
     console.log("Connected Successfully")
 }).catch((err) => {
     console.log("Something Wrong", err)
@@ -17,6 +20,10 @@ mongoose.connect("mongodb+srv://chetan01:gd0YIxXXu8aHXJ5p@chetan01.9ncgjlm.mongo
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+app.get("/", (req, res) => {
+    res.send("API is working 🚀");
+});
 
 app.post("/api/v1/signup", async (req: Request, res: Response) => {
     try {
@@ -197,6 +204,7 @@ app.post("/api/v1/signin", async (req: Request, res: Response) => {
 // });
 
 // Start the server
+
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
