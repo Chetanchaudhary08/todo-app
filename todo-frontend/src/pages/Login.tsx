@@ -10,7 +10,7 @@ function Login() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await API.post("/login", { email, password });
+            const res = await API.post("/signin", { email, password });
             // Save token
             localStorage.setItem("token", res.data.token);
             alert("Login successful!");
