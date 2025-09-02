@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import type { JSX } from "react/jsx-runtime";
+// import type { JSX } from "react/jsx-runtime";
 import type { ReactNode } from "react";
 
 interface ProtectedRouteProps {
