@@ -1,14 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import API from "../utils/api";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Logging in:", { email, password });
-        // later we'll connect to backend
+        try {
+            const res = await API.post("/login", { email, password });
+            // Save token
+            localStorage.setItem("token", res.data.token);
+            alert("Login successful!");
+            navigate("/todos"); // redirect to dashboard
+        } catch (error) {
+            console.error(error);
+            alert("Invalid credentials, please try again.");
+        }
     };
 
     return (
