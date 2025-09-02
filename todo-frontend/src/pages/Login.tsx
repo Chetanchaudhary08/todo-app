@@ -1,23 +1,33 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../utils/api";
+import { loginUser } from "../utils/api";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError("");
+        setLoading(true);
+
         try {
-            const res = await API.post("/signin", { email, password });
-            // Save token
+            const res = await loginUser({ email, password });
+
+            // Save token + userId in localStorage
             localStorage.setItem("token", res.data.token);
-            alert("Login successful!");
-            navigate("/todos"); // redirect to dashboard
-        } catch (error) {
-            console.error(error);
-            alert("Invalid credentials, please try again.");
+            localStorage.setItem("userID", res.data.userID);
+
+            navigate("/todos"); // redirect to todos page
+        } catch (err: any) {
+            console.error(err);
+            setError(err.response?.data?.message || "Login failed");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -32,6 +42,7 @@ function Login() {
                         className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                     <input
                         type="password"
@@ -39,14 +50,17 @@ function Login() {
                         className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                     <button
                         type="submit"
-                        className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+                        disabled={loading}
+                        className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
                     >
-                        Login
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
+                {error && <p className="text-red-500 text-center mt-3">{error}</p>}
                 <p className="mt-4 text-center text-gray-600">
                     Don’t have an account?{" "}
                     <Link to="/register" className="text-indigo-600 hover:underline">

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:3000/api/v1";
+export const API = "http://localhost:3000/api/v1";
 
 // Auth
 export const loginUser = (data: { email: string; password: string }) =>
