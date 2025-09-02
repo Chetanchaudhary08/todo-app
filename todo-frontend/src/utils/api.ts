@@ -1,31 +1,31 @@
 import axios from "axios";
 
-export const API = "http://localhost:3000/api/v1";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-// Auth
-export const loginUser = (data: { email: string; password: string }) =>
-    axios.post(`${API}/signin`, data);
+export interface Todo {
+    _id: string;
+    title: string;
+    priority?: string;
+    tags?: string[];
+    completed: boolean;
+}
 
-export const registerUser = (data: { username: string; email: string; password: string }) =>
-    axios.post(`${API}/signup`, data);
-
-// Todos
 export const getTodos = (token: string) =>
-    axios.get(`${API}/get-todos`, {
+    axios.get<Todo[]>(`${API_URL}/todos`, {
         headers: { Authorization: `Bearer ${token}` },
     });
 
-export const createTodo = (token: string, data: any) =>
-    axios.post(`${API}/createtodo`, data, {
+export const createTodo = (token: string, todo: Omit<Todo, "_id">) =>
+    axios.post<Todo>(`${API_URL}/todos`, todo, {
         headers: { Authorization: `Bearer ${token}` },
     });
 
-export const updateTodo = (token: string, id: string, data: any) =>
-    axios.put(`${API}/update-todo/${id}`, data, {
+export const updateTodo = (token: string, id: string, data: Partial<Todo>) =>
+    axios.put<Todo>(`${API_URL}/todos/${id}`, data, {
         headers: { Authorization: `Bearer ${token}` },
     });
 
 export const deleteTodo = (token: string, id: string) =>
-    axios.delete(`${API}/delete-todo/${id}`, {
+    axios.delete<{ message: string }>(`${API_URL}/todos/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
     });
