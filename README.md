@@ -61,7 +61,7 @@ A full-stack MERN (MongoDB, Express, React, Node.js) application for managing yo
     ```
     Start the backend server:
     ```sh
-    npm start
+    npm start or npm run dev 
     ```
 
 3.  **Set up the Frontend:**
