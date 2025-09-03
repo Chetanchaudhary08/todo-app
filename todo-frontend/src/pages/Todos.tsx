@@ -27,7 +27,7 @@ function Todos() {
     const loadTodos = async () => {
         try {
             const res = await getTodos(token!);
-            setTodos(res.data);
+            setTodos(res.data as Todo[]); // Corrected line
         } catch (err) {
             console.error("Error fetching todos", err);
         }
@@ -44,7 +44,7 @@ function Todos() {
                 priority,
                 completed: false,
             });
-            setTodos([...todos, res.data]);
+            setTodos([...todos, res.data as Todo]); // Corrected line
             setNewTodo("");
             setShowModal(false);
         } catch (err) {
@@ -57,7 +57,7 @@ function Todos() {
     const handleToggleComplete = async (id: string, completed: boolean) => {
         try {
             const res = await updateTodo(token!, id, { completed: !completed });
-            setTodos(todos.map((t) => (t._id === id ? res.data : t)));
+            setTodos(todos.map((t) => (t._id === id ? res.data as Todo : t))); // Corrected line
         } catch (err) {
             console.error("Error updating todo", err);
         }

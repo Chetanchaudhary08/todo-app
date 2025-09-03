@@ -21,7 +21,7 @@ mongoose.connect(DB_url).then(() => {
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: "https://todo-app-orcin-chi.vercel.app",
+    origin: "http://localhost:5173", // Change this to your frontend's local URL
     credentials: true,
 }));
 

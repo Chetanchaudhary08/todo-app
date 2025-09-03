@@ -2,6 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../utils/api";
 
+// Define the expected structure of the login response data
+interface LoginResponse {
+    token: string;
+    userID: string;
+}
+
 function Login() {
     // Local state
     const [email, setEmail] = useState("");
@@ -20,9 +26,12 @@ function Login() {
         try {
             const res = await loginUser({ email, password });
 
+            // Use a type assertion to tell TypeScript what res.data contains
+            const data = res.data as LoginResponse;
+
             // Save auth data
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("userID", res.data.userID);
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("userID", data.userID);
 
             // Redirect after login
             navigate("/todos");
@@ -38,13 +47,23 @@ function Login() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 p-6">
             {/* Outer container */}
             <div className="w-full max-w-4xl bg-gray-900/70 backdrop-blur-lg rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden border border-gray-700">
-
                 {/* Left panel */}
                 <div className="hidden md:flex md:w-1/2 flex-col items-center justify-center p-10 text-gray-200 space-y-6 bg-gradient-to-br from-gray-800/70 to-gray-900/70">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="size-6"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                        />
                     </svg>
+
                     <h1 className="text-3xl font-bold text-blue-400">Welcome Back 👋</h1>
                     <p className="text-center text-sm text-gray-400">
                         Sign in to manage your todos and stay on top of your day.
